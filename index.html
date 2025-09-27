@@ -2,8 +2,8 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Familien-Joker App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Familien-Joker</title>
     <style>
         * {
             margin: 0;
@@ -13,145 +13,231 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
+            color: white;
             overflow-x: hidden;
         }
 
-        .container {
+        .app-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
         .header {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 30px;
-            color: white;
+            padding: 20px 0;
         }
 
-        .header h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
         }
 
-        .header p {
-            font-size: clamp(1rem, 3vw, 1.2rem);
-            opacity: 0.9;
+        .nav {
+            display: flex;
+            gap: 20px;
         }
 
-        .app-container {
-            flex: 1;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            position: relative;
-            min-height: 600px;
-        }
-
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #666;
-            z-index: 10;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .error {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #e74c3c;
-            z-index: 10;
-            padding: 20px;
-        }
-
-        .error button {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 12px 24px;
+        .nav-item {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
+            text-decoration: none;
+            color: white;
             transition: background 0.3s;
         }
 
-        .error button:hover {
-            background: #c0392b;
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        iframe {
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #4fc3f7;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #4fc3f7;
+        }
+
+        .task-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
             width: 100%;
-            height: 100%;
+            margin-bottom: 15px;
+        }
+
+        .task-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .task-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .task-btn {
+            background: rgba(79, 195, 247, 0.2);
+            border: 1px solid #4fc3f7;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .task-btn:hover {
+            background: rgba(79, 195, 247, 0.3);
+        }
+
+        .task-btn.selected {
+            background: #4fc3f7;
+            color: #1a1a2e;
+        }
+
+        .sum {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #4fc3f7;
+            margin-bottom: 15px;
+        }
+
+        .warning {
+            color: #ff9800;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #4fc3f7, #29b6f6);
             border: none;
-            min-height: 600px;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
         }
 
         /* Mobile Optimierungen */
         @media (max-width: 768px) {
-            .container {
+            .app-container {
                 padding: 10px;
             }
 
             .header {
-                margin-bottom: 20px;
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
             }
 
-            .app-container {
-                border-radius: 15px;
-                min-height: 500px;
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
             }
 
-            iframe {
-                min-height: 500px;
+            .nav-item {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .task-buttons {
+                gap: 8px;
+            }
+
+            .task-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .task-input {
+                padding: 10px;
+                font-size: 16px; /* Verhindert Zoom auf iOS */
             }
         }
 
         @media (max-width: 480px) {
-            .container {
+            .app-container {
                 padding: 5px;
             }
 
-            .app-container {
-                border-radius: 10px;
-                min-height: 400px;
+            .card {
+                padding: 15px;
             }
 
-            iframe {
-                min-height: 400px;
+            .task-buttons {
+                gap: 6px;
+            }
+
+            .task-btn {
+                padding: 5px 10px;
+                font-size: 0.75rem;
             }
         }
 
         /* Touch-Optimierungen */
         @media (hover: none) and (pointer: coarse) {
-            .error button {
+            .task-btn, .nav-item, .submit-btn {
                 min-height: 44px;
                 min-width: 44px;
             }
@@ -159,93 +245,121 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="app-container">
         <div class="header">
-            <h1>🎯 Familien-Joker</h1>
-            <p>Deine App für Küchendienst & Aufgaben</p>
+            <div class="logo">Familien-Joker</div>
+            <nav class="nav">
+                <a href="#" class="nav-item active">Startseite</a>
+                <a href="#" class="nav-item">Profil</a>
+                <a href="#" class="nav-item">Schulden</a>
+                <a href="#" class="nav-item">Logs</a>
+            </nav>
         </div>
-        
-        <div class="app-container">
-            <div class="loading" id="loading">
-                <div class="loading-spinner"></div>
-                <p>App wird geladen...</p>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>Küchendienst</h2>
+                <div style="background: rgba(79, 195, 247, 0.2); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <h3 style="color: #4fc3f7; margin-bottom: 10px;">Diese Woche bis Freitag:</h3>
+                    <ul class="task-list">
+                        <li class="task-item">Tisch abräumen: Wieland + Valentin</li>
+                        <li class="task-item">Tisch decken: Romy + Friedrich</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(156, 39, 176, 0.2); padding: 15px; border-radius: 8px;">
+                    <h3 style="color: #9c27b0; margin-bottom: 10px;">Nächste Woche ab Samstag:</h3>
+                    <ul class="task-list">
+                        <li class="task-item">Tisch abräumen: Wieland + Gustav</li>
+                        <li class="task-item">Tisch decken: Romy + Linda</li>
+                    </ul>
+                </div>
             </div>
-            
-            <div class="error" id="error" style="display: none;">
-                <h3>⚠️ Fehler beim Laden</h3>
-                <p id="error-message">Die App konnte nicht geladen werden.</p>
-                <button onclick="retryLoad()">🔄 Erneut versuchen</button>
+
+            <div class="card">
+                <h2>Aufgabe hinzufügen</h2>
+                <input type="text" class="task-input" placeholder="Wer?" id="who-input">
+                
+                <div class="task-buttons">
+                    <button class="task-btn" data-points="1">Tisch decken (1x)</button>
+                    <button class="task-btn" data-points="1">Tisch abräumen (1x)</button>
+                    <button class="task-btn" data-points="1">Geschirrspüler ein/ausräumen (1x)</button>
+                    <button class="task-btn" data-points="0.5">kleine Aufgabe (0.5x)</button>
+                    <button class="task-btn" data-points="1">extra (+1)</button>
+                </div>
+                
+                <div class="sum">Summe: <span id="total-points">0.0x</span></div>
+                
+                <input type="text" class="task-input" placeholder="Für wen?" id="for-whom-input">
+                
+                <div class="warning">Bitte 'Wer?' auswählen</div>
             </div>
-            
-            <iframe 
-                id="app-frame"
-                src="https://valentin178.github.io/familien-joker-app/"
-                title="Familien-Joker App"
-                onload="hideLoading()"
-                onerror="showError('Netzwerkfehler beim Laden der App')"
-                style="display: none;">
-            </iframe>
         </div>
+
+        <button class="submit-btn">Eintragen</button>
     </div>
 
     <script>
-        let retryCount = 0;
-        const maxRetries = 3;
+        let selectedTasks = [];
+        let totalPoints = 0;
 
-        function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('app-frame').style.display = 'block';
-            document.getElementById('error').style.display = 'none';
-        }
-
-        function showError(message) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error').style.display = 'block';
-            document.getElementById('app-frame').style.display = 'none';
-            document.getElementById('error-message').textContent = message;
-        }
-
-        function retryLoad() {
-            if (retryCount < maxRetries) {
-                retryCount++;
-                document.getElementById('loading').style.display = 'block';
-                document.getElementById('error').style.display = 'none';
-                document.getElementById('app-frame').style.display = 'none';
+        // Task Button Funktionalität
+        document.querySelectorAll('.task-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const points = parseFloat(this.dataset.points);
                 
-                // Neues iframe erstellen für sauberen Reload
-                const iframe = document.getElementById('app-frame');
-                const newIframe = iframe.cloneNode(true);
-                newIframe.src = iframe.src + '?retry=' + retryCount;
-                iframe.parentNode.replaceChild(newIframe, iframe);
-            } else {
-                showError('App konnte nach mehreren Versuchen nicht geladen werden. Bitte überprüfe deine Internetverbindung.');
-            }
+                if (this.classList.contains('selected')) {
+                    // Entfernen
+                    this.classList.remove('selected');
+                    selectedTasks = selectedTasks.filter(task => task !== this.textContent);
+                    totalPoints -= points;
+                } else {
+                    // Hinzufügen
+                    this.classList.add('selected');
+                    selectedTasks.push(this.textContent);
+                    totalPoints += points;
+                }
+                
+                updateTotal();
+            });
+        });
+
+        function updateTotal() {
+            document.getElementById('total-points').textContent = totalPoints.toFixed(1) + 'x';
         }
 
-        // Timeout für langsames Laden
-        setTimeout(() => {
-            if (document.getElementById('loading').style.display !== 'none') {
-                showError('App lädt zu langsam. Bitte überprüfe deine Internetverbindung.');
-            }
-        }, 10000);
-
-        // Mobile Anpassungen
-        function adjustForDevice() {
-            const isMobile = window.innerWidth <= 768;
+        // Submit Button
+        document.querySelector('.submit-btn').addEventListener('click', function() {
+            const who = document.getElementById('who-input').value;
+            const forWhom = document.getElementById('for-whom-input').value;
             
-            if (isMobile) {
-                document.body.style.fontSize = '14px';
-            } else {
-                // Desktop bleibt unverändert
-                document.body.style.fontSize = '';
+            if (!who) {
+                alert('Bitte "Wer?" auswählen');
+                return;
             }
-        }
+            
+            if (selectedTasks.length === 0) {
+                alert('Bitte mindestens eine Aufgabe auswählen');
+                return;
+            }
+            
+            if (!forWhom) {
+                alert('Bitte "Für wen?" eingeben');
+                return;
+            }
+            
+            // Hier würde normalerweise die Daten an den Server gesendet
+            alert(`Aufgabe erstellt!\nWer: ${who}\nAufgaben: ${selectedTasks.join(', ')}\nFür wen: ${forWhom}\nPunkte: ${totalPoints.toFixed(1)}x`);
+            
+            // Reset
+            document.getElementById('who-input').value = '';
+            document.getElementById('for-whom-input').value = '';
+            selectedTasks = [];
+            totalPoints = 0;
+            updateTotal();
+            document.querySelectorAll('.task-btn').forEach(btn => btn.classList.remove('selected'));
+        });
 
-        // Event Listeners
-        window.addEventListener('resize', adjustForDevice);
-        window.addEventListener('load', adjustForDevice);
-        
-        // Touch-Events für bessere mobile Performance
+        // Mobile Touch Optimierungen
         if ('ontouchstart' in window) {
             document.body.classList.add('touch-device');
         }
